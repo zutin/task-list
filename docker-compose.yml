@@ -1,0 +1,29 @@
+services:
+  api:
+    image: ruby:latest
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - rubygems:/usr/local/bundle
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST: postgres
+    entrypoint: ./entrypoint.sh
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: task_list_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - database:/var/lib/postgresql/data
+
+volumes:
+  rubygems:
+  database:

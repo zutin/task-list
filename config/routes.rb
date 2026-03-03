@@ -3,5 +3,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :tasks, only: [ :index ]
+    resources :lists, only: [ :index ]
   end
 end

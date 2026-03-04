@@ -17,9 +17,7 @@ module Types
       argument :due_after, GraphQL::Types::ISO8601DateTime, required: false, description: "Filter tasks due after this date."
     end
 
-    field :lists, [ Types::ListType ], null: true, description: "Fetches all lists." do
-      argument :include_tasks, Boolean, required: false, description: "Whether to include tasks in the response."
-    end
+    field :lists, [ Types::ListType ], null: true, description: "Fetches all lists and their tasks."
 
     def task(id:) = Task.find_by(id: id)
 
@@ -33,6 +31,6 @@ module Types
 
     def list(id:) = List.find_by(id: id)
 
-    def lists(include_tasks: false) = include_tasks ? List.includes(:tasks).order(:position) : List.order(:position)
+    def lists = List.includes(:tasks).order(:position)
   end
 end

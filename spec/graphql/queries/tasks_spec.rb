@@ -18,8 +18,8 @@ RSpec.describe 'GetTasks query', type: :request do
     GQL
   end
 
-  let(:list_1) { create(:list, :with_tasks, name: "Work") }
-  let(:list_2) { create(:list, :with_tasks, name: "Personal", position: 2) }
+  let(:list_1) { create(:list, :with_tasks, name: "Doing") }
+  let(:list_2) { create(:list, :with_tasks, name: "Done", position: 2) }
 
   before { list_1; list_2 }
 

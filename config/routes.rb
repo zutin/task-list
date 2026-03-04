@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
+  post "/graphql", to: "graphql#execute"
   # root "posts#index"
-
-  namespace :api do
-    resources :tasks, only: [ :index ]
-    resources :lists, only: [ :index ]
-  end
 end

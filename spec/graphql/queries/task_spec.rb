@@ -27,12 +27,14 @@ RSpec.describe 'GetTask query', type: :request do
     json = JSON.parse(response.body)
     data = json.dig('data', 'task')
 
-    expect(response).to have_http_status(:ok)
-    expect(data['id']).to eq(task.id.to_s)
-    expect(data['title']).to eq("My task")
-    expect(data['description']).to eq("Details")
-    expect(data['completed']).to eq(false)
-    expect(data['position']).to eq(1)
+    aggregate_failures "task data" do
+      expect(response).to have_http_status(:ok)
+      expect(data['id']).to eq(task.id.to_s)
+      expect(data['title']).to eq("My task")
+      expect(data['description']).to eq("Details")
+      expect(data['completed']).to eq(false)
+      expect(data['position']).to eq(1)
+    end
   end
 
   it 'returns nil when the task is not found' do

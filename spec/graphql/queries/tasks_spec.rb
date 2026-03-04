@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe 'GetTasks query', type: :request do
   let(:query) do
     <<~GQL
-      query GetTasks($listIds: [ID!]) {
-        tasks(listIds: $listIds) {
+      query GetTasks($listIds: [ID!], $completed: Boolean, $dueBefore: ISO8601DateTime, $dueAfter: ISO8601DateTime) {
+        tasks(listIds: $listIds, completed: $completed, dueBefore: $dueBefore, dueAfter: $dueAfter) {
           id
           title
           description
@@ -21,9 +21,9 @@ RSpec.describe 'GetTasks query', type: :request do
   let(:list_1) { create(:list, :with_tasks, name: "Work") }
   let(:list_2) { create(:list, :with_tasks, name: "Personal", position: 2) }
 
-  context 'without list_ids filter' do
-    before { list_1; list_2 }
+  before { list_1; list_2 }
 
+  context 'without list_ids filter' do
     it 'returns all tasks ordered by list_id and position' do
       post '/graphql', params: { query: query }
 
@@ -73,6 +73,113 @@ RSpec.describe 'GetTasks query', type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(tasks).to be_empty
+    end
+  end
+
+  context 'with completed filter' do
+    let(:completed_task) { list_1.tasks.first }
+
+    before { completed_task.update(completed: true) }
+
+    it 'returns only completed tasks' do
+      post '/graphql', params: { query: query, variables: { completed: true } }.to_json, headers: { 'Content-Type': 'application/json' }
+
+      json = JSON.parse(response.body)
+      tasks = json.dig('data', 'tasks')
+
+      aggregate_failures "completed tasks" do
+        expect(response).to have_http_status(:ok)
+        expect(tasks.length).to eq(1)
+        expect(tasks.first['id']).to eq(list_1.tasks.first.id.to_s)
+        expect(tasks.first['completed']).to eq(true)
+      end
+    end
+
+    it 'returns only incomplete tasks' do
+      post '/graphql', params: { query: query, variables: { completed: false } }.to_json, headers: { 'Content-Type': 'application/json' }
+
+      json = JSON.parse(response.body)
+      tasks = json.dig('data', 'tasks')
+
+      aggregate_failures "incomplete tasks" do
+        expect(response).to have_http_status(:ok)
+        expect(tasks.length).to eq(5)
+        expect(tasks).to all(include('completed' => false))
+      end
+    end
+  end
+
+  context 'with due_at filters' do
+    let(:soon_task) { list_1.tasks.first }
+    let(:later_task) { list_1.tasks.last }
+
+    before do
+      soon_task.update(due_at: 3.days.from_now)
+      later_task.update(due_at: 10.days.from_now)
+    end
+
+    it 'returns tasks due before a given date' do
+      post '/graphql', params: { query: query, variables: { dueBefore: 5.days.from_now.iso8601 } }
+
+      json = JSON.parse(response.body)
+      tasks = json.dig('data', 'tasks')
+
+      aggregate_failures "due before" do
+        expect(response).to have_http_status(:ok)
+        expect(tasks.length).to eq(1)
+        expect(tasks.first['id']).to eq(soon_task.id.to_s)
+      end
+    end
+
+    it 'returns tasks due after a given date' do
+      post '/graphql', params: { query: query, variables: { dueAfter: 5.days.from_now.iso8601 } }
+
+      json = JSON.parse(response.body)
+      tasks = json.dig('data', 'tasks')
+
+      aggregate_failures "due after" do
+        expect(response).to have_http_status(:ok)
+        expect(tasks.length).to eq(1)
+        expect(tasks.first['id']).to eq(later_task.id.to_s)
+      end
+    end
+
+    it 'returns tasks within a date range' do
+      post '/graphql', params: { query: query, variables: { dueAfter: 1.day.from_now.iso8601, dueBefore: 5.days.from_now.iso8601 } }
+
+      json = JSON.parse(response.body)
+      tasks = json.dig('data', 'tasks')
+
+      aggregate_failures "date range" do
+        expect(response).to have_http_status(:ok)
+        expect(tasks.length).to eq(1)
+        expect(tasks.first['id']).to eq(soon_task.id.to_s)
+      end
+    end
+  end
+
+  context 'with combined filters' do
+    let(:completed_soon_task) { list_1.tasks.first }
+    let(:pending_soon_task) { list_1.tasks.second }
+    let(:completed_later_task) { list_1.tasks.third }
+
+    before do
+      completed_soon_task.update(completed: true, due_at: 2.days.from_now)
+      pending_soon_task.update(completed: false, due_at: 2.days.from_now)
+      completed_later_task.update(completed: true, due_at: 10.days.from_now)
+    end
+
+    it 'filters by list, completed and due_before together' do
+      post '/graphql', params: { query: query, variables: { listIds: [ list_1.id ], completed: true, dueBefore: 5.days.from_now.iso8601 } }.to_json, headers: { 'Content-Type': 'application/json' }
+
+      json = JSON.parse(response.body)
+      tasks = json.dig('data', 'tasks')
+
+      aggregate_failures "combined filter" do
+        expect(response).to have_http_status(:ok)
+        expect(tasks.length).to eq(1)
+        expect(tasks.first['id']).to eq(completed_soon_task.id.to_s)
+      end
     end
   end
 end

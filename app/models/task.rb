@@ -1,6 +1,10 @@
 class Task < ApplicationRecord
   belongs_to :list
 
+  scope :by_completed, ->(completed) { where(completed: completed) }
+  scope :due_before, ->(date) { where(due_at: ...date) }
+  scope :due_after, ->(date) { where(due_at: date..) }
+
   validates :title, :position, presence: true
   validates :title, length: { maximum: 255 }
   validates :description, length: { maximum: 3000 }

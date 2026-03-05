@@ -1,4 +1,6 @@
 class Task < ApplicationRecord
+  include Positionable
+
   belongs_to :list
 
   scope :by_completed, ->(completed) { completed ? where.not(completed_at: nil) : where(completed_at: nil) }
@@ -9,8 +11,11 @@ class Task < ApplicationRecord
   validates :title, length: { maximum: 255 }
   validates :description, length: { maximum: 3000 }
 
-  # The task position in the list is unique and must not be repeated
-  # There cannot be multiple tasks with same position in the same list
-  # I think it is easier to have a after_save callback that keeps this in line instead of a DB level check
-  # And also make all new tasks to have the last position possible to avoid errors
+  private
+
+  def positionable_siblings = Task.where(list_id: list_id).where.not(id: id)
+
+  def old_positionable_siblings = Task.where(list_id: list_id_was).where.not(id: id)
+
+  def positionable_scope_changed? = list_id_changed? && list_id_was.present?
 end

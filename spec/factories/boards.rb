@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :board do
-    name { "MyString" }
-    description { "MyString" }
+    name { "New board" }
+    description { "Board description" }
   end
 end

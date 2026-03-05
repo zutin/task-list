@@ -96,6 +96,7 @@ jobs:
 
       - name: Check test coverage
         run: |
-          COVERAGE=$(ruby -e "require 'json'; puts JSON.parse(File.read('.last_run.json'))['result']['line']")
+          ls -la coverage/ || true
+          COVERAGE=$(ruby -e "require 'json'; puts JSON.parse(File.read('coverage/.last_run.json'))['result']['line']")
           echo "Coverage: $COVERAGE%"
           ruby -e "exit(1) unless $COVERAGE >= 95.0"

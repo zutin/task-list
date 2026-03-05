@@ -9,7 +9,7 @@ RSpec.describe 'GetTask query', type: :request do
           title
           description
           dueAt
-          completed
+          completedAt
           position
           createdAt
           updatedAt
@@ -32,7 +32,7 @@ RSpec.describe 'GetTask query', type: :request do
       expect(data['id']).to eq(task.id.to_s)
       expect(data['title']).to eq("My task")
       expect(data['description']).to eq("Details")
-      expect(data['completed']).to eq(false)
+      expect(data['completedAt']).to be_nil
       expect(data['position']).to eq(1)
     end
   end

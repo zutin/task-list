@@ -13,7 +13,9 @@ RSpec.describe 'DeleteList mutation', type: :request do
   end
 
   context 'with valid id' do
-    let!(:list) { create(:list, name: "To delete", position: 1) }
+    let(:list) { create(:list, name: "To delete", position: 1) }
+
+    before { list }
 
     it 'deletes the list and returns its id' do
       expect {

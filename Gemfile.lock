@@ -339,6 +339,7 @@ GEM
     thruster (0.1.18-arm64-darwin)
     thruster (0.1.18-x86_64-darwin)
     thruster (0.1.18-x86_64-linux)
+    timecop (0.9.10)
     timeout (0.6.0)
     tsort (0.2.0)
     tzinfo (2.0.6)
@@ -382,6 +383,7 @@ DEPENDENCIES
   solid_cache
   solid_queue
   thruster
+  timecop (~> 0.9.10)
   tzinfo-data
 
 CHECKSUMS
@@ -511,6 +513,7 @@ CHECKSUMS
   thruster (0.1.18-arm64-darwin) sha256=8b297797a354ec6a81ea156b44279b66bff8da2404112f70f4ec515c2f276cc2
   thruster (0.1.18-x86_64-darwin) sha256=355b6c0ee30ead7f7096448de4f0f9e8acc8454d2ef24b2d54965c5d813f1c67
   thruster (0.1.18-x86_64-linux) sha256=0ec1ff5f12289c1ac10cf8e28ce6b5266f4e73416b34a664b79d037c7d955c40
+  timecop (0.9.10) sha256=12ba45ce57cdcf6b1043cb6cdffa6381fd89ce10d369c28a7f6f04dc1b0cd8eb
   timeout (0.6.0) sha256=6d722ad619f96ee383a0c557ec6eb8c4ecb08af3af62098a0be5057bf00de1af
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b

@@ -9,7 +9,7 @@ RSpec.describe 'GetTasks query', type: :request do
           title
           description
           dueAt
-          completed
+          completedAt
           position
           createdAt
           updatedAt
@@ -79,7 +79,7 @@ RSpec.describe 'GetTasks query', type: :request do
   context 'with completed filter' do
     let(:completed_task) { list_1.tasks.first }
 
-    before { completed_task.update(completed: true) }
+    before { completed_task.update(completed_at: Time.current) }
 
     it 'returns only completed tasks' do
       post '/graphql', params: { query: query, variables: { completed: true } }.to_json, headers: { 'Content-Type': 'application/json' }
@@ -91,7 +91,7 @@ RSpec.describe 'GetTasks query', type: :request do
         expect(response).to have_http_status(:ok)
         expect(tasks.length).to eq(1)
         expect(tasks.first['id']).to eq(list_1.tasks.first.id.to_s)
-        expect(tasks.first['completed']).to eq(true)
+        expect(tasks.first['completedAt']).to eq(completed_task.completed_at.iso8601)
       end
     end
 
@@ -104,7 +104,7 @@ RSpec.describe 'GetTasks query', type: :request do
       aggregate_failures "incomplete tasks" do
         expect(response).to have_http_status(:ok)
         expect(tasks.length).to eq(5)
-        expect(tasks).to all(include('completed' => false))
+        expect(tasks).to all(include('completedAt' => nil))
       end
     end
   end
@@ -164,9 +164,9 @@ RSpec.describe 'GetTasks query', type: :request do
     let(:completed_later_task) { list_1.tasks.third }
 
     before do
-      completed_soon_task.update(completed: true, due_at: 2.days.from_now)
-      pending_soon_task.update(completed: false, due_at: 2.days.from_now)
-      completed_later_task.update(completed: true, due_at: 10.days.from_now)
+      completed_soon_task.update(completed_at: Time.current, due_at: 2.days.from_now)
+      pending_soon_task.update(completed_at: nil, due_at: 2.days.from_now)
+      completed_later_task.update(completed_at: Time.current, due_at: 10.days.from_now)
     end
 
     it 'filters by list, completed and due_before together' do

@@ -13,7 +13,7 @@ RSpec.describe 'GetLists query', type: :request do
           tasks {
             id
             title
-            completed
+            completedAt
             position
           }
         }

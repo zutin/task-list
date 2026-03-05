@@ -12,7 +12,7 @@ module Mutations
 
       return { list: nil, errors: [ "List not found" ] } unless list
 
-      if list.update(attributes.compact)
+      if list.update(attributes)
         { list: list, errors: [] }
       else
         { list: nil, errors: list.errors.full_messages }

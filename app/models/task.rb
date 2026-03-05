@@ -1,7 +1,7 @@
 class Task < ApplicationRecord
   belongs_to :list
 
-  scope :by_completed, ->(completed) { where(completed: completed) }
+  scope :by_completed, ->(completed) { completed ? where.not(completed_at: nil) : where(completed_at: nil) }
   scope :due_before, ->(date) { where(due_at: ...date) }
   scope :due_after, ->(date) { where(due_at: date..) }
 

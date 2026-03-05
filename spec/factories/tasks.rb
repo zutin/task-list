@@ -5,7 +5,7 @@ FactoryBot.define do
     association :list
 
     trait :completed do
-      completed { true }
+      completed_at { Time.current }
     end
 
     trait :with_due_date do

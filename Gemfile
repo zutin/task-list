@@ -20,6 +20,7 @@ group :development, :test do
   gem "brakeman", require: false
   gem "rspec-rails", "~> 8.0.0"
   gem "rubocop-rails-omakase", require: false
+  gem "timecop", "~> 0.9.10"
 end
 
 gem "graphql", "~> 2.5"

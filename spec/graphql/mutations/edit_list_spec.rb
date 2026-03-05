@@ -16,7 +16,9 @@ RSpec.describe 'EditList mutation', type: :request do
     GQL
   end
 
-  let!(:list) { create(:list, name: "Original name", position: 1) }
+  let(:list) { create(:list, name: "Original name", position: 1) }
+
+  before { list }
 
   context 'with valid params' do
     it 'updates the list name' do

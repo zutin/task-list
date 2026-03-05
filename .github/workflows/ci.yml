@@ -1,12 +1,12 @@
-name: CI
-
+name: RoR CI
 on:
   pull_request:
   push:
-    branches: [ ci-workflow ]
+    branches: [ main ]
 
 jobs:
   scan_ruby:
+    name: Security Check (Brakeman)
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +23,7 @@ jobs:
         run: bin/brakeman --no-pager
 
   lint:
+    name: Lint Code (RuboCop)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -38,6 +39,7 @@ jobs:
         run: bin/rubocop -f github
 
   test:
+    name: Run Specs (RSpec)
     runs-on: ubuntu-latest
 
     services:
@@ -75,8 +77,25 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
         run: bundle exec rspec
 
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/.last_run.json
+
+  coverage:
+    name: Check Test Coverage
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage
+
       - name: Check test coverage
         run: |
-          COVERAGE=$(ruby -e "require 'json'; puts JSON.parse(File.read('coverage/.last_run.json'))['result']['line']")
+          COVERAGE=$(ruby -e "require 'json'; puts JSON.parse(File.read('.last_run.json'))['result']['line']")
           echo "Coverage: $COVERAGE%"
           ruby -e "exit(1) unless $COVERAGE >= 95.0"

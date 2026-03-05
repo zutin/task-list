@@ -2,7 +2,7 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  user: <%= ENV['POSTGRES_USER'] { 'postgres' } %>
+  username: <%= ENV['POSTGRES_USER'] { 'postgres' } %>
   password: <%= ENV['POSTGRES_PASSWORD'] { 'password' } %>
   host: <%= ENV['POSTGRES_HOST'] { 'postgres' } %>
 
@@ -18,8 +18,8 @@ production:
   primary: &primary_production
     <<: *default
     database: task_list_production
-    username: task_list
-    password: <%= ENV["TASK_LIST_DATABASE_PASSWORD"] %>
+    username: <%= ENV["POSTGRES_USER"] %>
+    password: <%= ENV["POSTGRES_PASSWORD"] %>
   cache:
     <<: *primary_production
     database: task_list_production_cache

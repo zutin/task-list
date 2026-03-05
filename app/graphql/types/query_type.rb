@@ -19,6 +19,12 @@ module Types
 
     field :lists, [ Types::ListType ], null: true, description: "Fetches all lists and their tasks."
 
+    field :board, Types::BoardType, null: true, description: "Fetches a board by ID." do
+      argument :id, ID, required: true, description: "ID of the board."
+    end
+
+    field :boards, [ Types::BoardType ], null: true, description: "Fetches all boards."
+
     def task(id:) = Task.find_by(id: id)
 
     def tasks(list_ids: nil, completed: nil, due_before: nil, due_after: nil)
@@ -32,5 +38,9 @@ module Types
     def list(id:) = List.find_by(id: id)
 
     def lists = List.includes(:tasks).order(:position)
+
+    def board(id:) = Board.includes(lists: :tasks).find_by(id: id)
+
+    def boards = Board.includes(lists: :tasks).order(updated_at: :desc, name: :asc)
   end
 end

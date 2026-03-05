@@ -18,11 +18,8 @@ RSpec.describe 'EditTask mutation', type: :request do
       }
     GQL
   end
-
   let(:list) { create(:list, name: "My list", position: 1) }
   let(:task) { create(:task, title: "Original title", list: list, position: 1) }
-
-  before { task }
 
   context 'with valid params' do
     it 'updates the task title' do

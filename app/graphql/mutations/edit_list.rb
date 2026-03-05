@@ -2,6 +2,7 @@ module Mutations
   class EditList < BaseMutation
     argument :id, ID, required: true
     argument :name, String, required: false
+    argument :board_id, ID, required: false
     argument :position, Integer, required: false
 
     field :list, Types::ListType, null: true

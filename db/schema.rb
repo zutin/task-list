@@ -10,15 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_05_070000) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_05_080000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "boards", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["updated_at", "name"], name: "index_boards_on_updated_at_and_name"
+  end
 
   create_table "lists", force: :cascade do |t|
     t.string "name", null: false
     t.integer "position", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "board_id", null: false
+    t.index ["board_id", "position"], name: "index_lists_on_board_id_and_position"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -30,8 +40,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_05_070000) do
     t.bigint "list_id", null: false
     t.integer "position", default: 1, null: false
     t.datetime "completed_at"
-    t.index ["list_id"], name: "index_tasks_on_list_id"
+    t.index ["completed_at"], name: "index_tasks_on_completed_at"
+    t.index ["due_at"], name: "index_tasks_on_due_at"
+    t.index ["list_id", "position"], name: "index_tasks_on_list_id_and_position"
   end
 
+  add_foreign_key "lists", "boards"
   add_foreign_key "tasks", "lists"
 end

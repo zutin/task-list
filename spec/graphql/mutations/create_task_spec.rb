@@ -18,10 +18,7 @@ RSpec.describe 'CreateTask mutation', type: :request do
       }
     GQL
   end
-
   let(:list) { create(:list, name: "My list", position: 1) }
-
-  before { list }
 
   context 'with valid params' do
     it 'creates a task and returns it' do

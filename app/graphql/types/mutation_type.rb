@@ -8,5 +8,8 @@ module Types
     field :create_task, mutation: Mutations::CreateTask
     field :edit_task, mutation: Mutations::EditTask
     field :delete_task, mutation: Mutations::DeleteTask
+    field :create_board, mutation: Mutations::CreateBoard
+    field :edit_board, mutation: Mutations::EditBoard
+    field :delete_board, mutation: Mutations::DeleteBoard
   end
 end

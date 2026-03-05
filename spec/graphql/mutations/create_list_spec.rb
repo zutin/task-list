@@ -15,11 +15,12 @@ RSpec.describe 'CreateList mutation', type: :request do
       }
     GQL
   end
+  let(:board) { create(:board, name: "My board") }
 
   context 'with valid params' do
     it 'creates a list and returns it' do
       expect {
-        post '/graphql', params: { query: mutation, variables: { input: { name: "My list", position: 1 } } }, as: :json
+        post '/graphql', params: { query: mutation, variables: { input: { name: "My list", position: 1, boardId: board.id } } }, as: :json
       }.to change(List, :count).by(1)
 
       json = JSON.parse(response.body)
@@ -38,7 +39,7 @@ RSpec.describe 'CreateList mutation', type: :request do
   context 'with missing name' do
     it 'returns errors and nil list' do
       expect {
-        post '/graphql', params: { query: mutation, variables: { input: { name: "", position: 1 } } }, as: :json
+        post '/graphql', params: { query: mutation, variables: { input: { name: "", position: 1, boardId: board.id } } }, as: :json
       }.not_to change(List, :count)
 
       json = JSON.parse(response.body)
@@ -55,7 +56,7 @@ RSpec.describe 'CreateList mutation', type: :request do
   context 'with name exceeding maximum length' do
     it 'returns errors and nil list' do
       expect {
-        post '/graphql', params: { query: mutation, variables: { input: { name: "a" * 101, position: 1 } } }, as: :json
+        post '/graphql', params: { query: mutation, variables: { input: { name: "a" * 101, position: 1, boardId: board.id } } }, as: :json
       }.not_to change(List, :count)
 
       json = JSON.parse(response.body)

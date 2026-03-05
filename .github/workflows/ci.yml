@@ -1,4 +1,4 @@
-name: RoR CI
+name: Ruby CI
 on:
   pull_request:
   push:
@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: coverage/.last_run.json
+          path: coverage/
 
   coverage:
     name: Check Test Coverage

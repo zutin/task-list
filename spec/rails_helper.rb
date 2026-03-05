@@ -7,6 +7,7 @@ SimpleCov.start do
   add_filter 'app/graphql/task_list_schema.rb'
   add_filter 'app/controllers/graphql_controller.rb'
   enable_coverage :branch
+  minimum_coverage 95
 end
 
 require_relative '../config/environment'

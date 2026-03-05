@@ -9,6 +9,11 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 # return unless Rails.env.test?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'simplecov'
+SimpleCov.start do
+  add_filter 'app/graphql/task_list_schema.rb'
+  add_filter 'app/controllers/graphql_controller.rb'
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

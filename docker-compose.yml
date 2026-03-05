@@ -13,6 +13,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_HOST: postgres
+      FRONTEND_URL: http://localhost:5173
     entrypoint: ./entrypoint.sh
 
   postgres:

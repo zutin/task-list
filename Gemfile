@@ -6,7 +6,7 @@ gem "bootsnap", require: false
 gem "kamal", require: false
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
-# gem "rack-cors"
+gem "rack-cors"
 gem "rails", "~> 8.0.4"
 gem "solid_cache"
 gem "solid_queue"
@@ -20,6 +20,7 @@ group :development, :test do
   gem "brakeman", require: false
   gem "rspec-rails", "~> 8.0.0"
   gem "rubocop-rails-omakase", require: false
+  gem "simplecov", require: false
   gem "timecop", "~> 0.9.10"
 end
 

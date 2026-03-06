@@ -9,7 +9,7 @@ function useFetchBoard(boardId) {
   })
 
   const result = useMemo(() => {
-    if (!data) {
+    if (!data || !data.board) {
       return { board: null, lists: [], tasks: [] }
     }
 

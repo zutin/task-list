@@ -1,5 +1,5 @@
 # I will improve this later, don't worry :)
-Board.create!(name: 'My board')
+Board.create!(name: 'My board', description: 'This is my board')
 List.create!(name: 'Vacation plans', board: Board.first)
 Task.create!(title: 'Rome', description: 'A nice first task', due_at: Time.zone.parse('2026-03-03 03:00:00'), list: List.first, position: 1)
 Task.create!(title: 'Paris', description: 'This is another task', due_at: Time.zone.parse('2026-03-04 06:00:00'), list: List.first, position: 2)

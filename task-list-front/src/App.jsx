@@ -6,7 +6,7 @@ import List from './components/List'
 
 function App() {
   const { loading, error, board, lists, tasks: fetchedTasks, refetch } = useFetchBoard()
-  const { tasks, handleDragEnd, moveTaskToList, toggleComplete } = useTaskDrag({ fetchedTasks, refetch })
+  const { tasks, handleDragEnd, moveTaskToList, toggleComplete, updateTask } = useTaskDrag({ fetchedTasks, refetch })
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
   if (loading) return <p className='text-xl'>Loading...</p>
@@ -30,6 +30,7 @@ function App() {
               lists={lists}
               onMoveToList={moveTaskToList}
               onToggleComplete={toggleComplete}
+              onUpdateTask={updateTask}
               tasks={tasks
                 .filter(task => task.listId === list.id)
                 .sort((a, b) => a.position - b.position)}

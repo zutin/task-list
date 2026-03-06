@@ -8,7 +8,7 @@ export default function useTaskDrag({ fetchedTasks, refetch }) {
   const [editTask] = useMutation(UPDATE_TASK)
 
   const fetchedKey = useMemo(
-    () => fetchedTasks.map(t => `${t.id}:${t.listId}:${t.position}:${t.completedAt}`).join(','),
+    () => fetchedTasks.map(t => `${t.id}:${t.listId}:${t.position}:${t.completedAt}:${t.dueAt}:${t.title}:${t.description}`).join(','),
     [fetchedTasks]
   )
 
@@ -76,5 +76,23 @@ export default function useTaskDrag({ fetchedTasks, refetch }) {
       })
   }
 
-  return { tasks, handleDragEnd, moveTaskToList, toggleComplete }
+  function setDueDate(taskId, dueAt) {
+    editTask({ variables: { id: taskId, dueAt } })
+      .then(() => refetch())
+      .catch((err) => {
+        console.error('Failed to set due date:', err)
+        refetch()
+      })
+  }
+
+  function updateTask(taskId, fields) {
+    editTask({ variables: { id: taskId, ...fields } })
+      .then(() => refetch())
+      .catch((err) => {
+        console.error('Failed to update task:', err)
+        refetch()
+      })
+  }
+
+  return { tasks, handleDragEnd, moveTaskToList, toggleComplete, setDueDate, updateTask }
 }

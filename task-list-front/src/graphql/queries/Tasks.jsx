@@ -47,8 +47,8 @@ const CREATE_TASK = gql`
 `;
 
 const UPDATE_TASK = gql`
-  mutation EditTask($id: ID!, $position: Int, $listId: ID, $completedAt: ISO8601DateTime) {
-    editTask(input: { id: $id, position: $position, listId: $listId, completedAt: $completedAt }) {
+  mutation EditTask($id: ID!, $title: String, $description: String, $position: Int, $listId: ID, $completedAt: ISO8601DateTime, $dueAt: ISO8601DateTime) {
+    editTask(input: { id: $id, title: $title, description: $description, position: $position, listId: $listId, completedAt: $completedAt, dueAt: $dueAt }) {
       task {
         id
         title

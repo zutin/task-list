@@ -62,4 +62,13 @@ const UPDATE_TASK = gql`
   }
 `;
 
-export { GET_TASKS, GET_TASK, CREATE_TASK, UPDATE_TASK };
+const DELETE_TASK = gql`
+  mutation DeleteTask($input: DeleteTaskInput!) {
+    deleteTask(input: $input) {
+      id
+      errors
+    }
+  }
+`;
+
+export { GET_TASKS, GET_TASK, CREATE_TASK, UPDATE_TASK, DELETE_TASK };

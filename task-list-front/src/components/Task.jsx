@@ -3,10 +3,11 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import TaskModal from './TaskModal'
 
-export default function Task({ task, lists, onMoveToList, onToggleComplete, onUpdateTask }) {
+export default function Task({ task, lists, onMoveToList, onToggleComplete, onUpdateTask, onDeleteTask }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [menuPos, setMenuPos] = useState({ x: 0, y: 0 })
   const [showModal, setShowModal] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const menuRef = useRef(null)
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id })
@@ -126,6 +127,18 @@ export default function Task({ task, lists, onMoveToList, onToggleComplete, onUp
           ))}
           {otherLists.length === 0 && (
             <div className="context-menu-item disabled">No other lists</div>
+          )}
+          <div className="context-menu-divider" />
+          {confirmDelete ? (
+            <div className="context-menu-confirm">
+              <span className="context-menu-confirm-label">Delete this task?</span>
+              <div className="context-menu-confirm-actions">
+                <button className="context-menu-confirm-btn confirm-yes" onClick={() => { setMenuOpen(false); setConfirmDelete(false); onDeleteTask(task.id) }}>Yes</button>
+                <button className="context-menu-confirm-btn confirm-no" onClick={() => setConfirmDelete(false)}>No</button>
+              </div>
+            </div>
+          ) : (
+            <button className="context-menu-item context-menu-item-danger" onClick={() => setConfirmDelete(true)}>Delete task</button>
           )}
         </div>
       )}

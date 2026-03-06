@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useMutation } from '@apollo/client/react'
 import { arrayMove } from '@dnd-kit/sortable'
-import { UPDATE_TASK } from '../graphql/queries/Tasks'
+import { UPDATE_TASK, DELETE_TASK, CREATE_TASK } from '../graphql/queries/Tasks'
 
 export default function useTaskDrag({ fetchedTasks, refetch }) {
   const [tasks, setTasks] = useState(fetchedTasks)
   const [editTask] = useMutation(UPDATE_TASK)
+  const [removeTask] = useMutation(DELETE_TASK)
+  const [addTask] = useMutation(CREATE_TASK)
 
   const fetchedKey = useMemo(
     () => fetchedTasks.map(t => `${t.id}:${t.listId}:${t.position}:${t.completedAt}:${t.dueAt}:${t.title}:${t.description}`).join(','),
@@ -94,5 +96,24 @@ export default function useTaskDrag({ fetchedTasks, refetch }) {
       })
   }
 
-  return { tasks, handleDragEnd, moveTaskToList, toggleComplete, setDueDate, updateTask }
+  function deleteTask(taskId) {
+    setTasks(prev => prev.filter(t => t.id !== taskId))
+    removeTask({ variables: { input: { id: taskId } } })
+      .then(() => refetch())
+      .catch((err) => {
+        console.error('Failed to delete task:', err)
+        refetch()
+      })
+  }
+
+  function createTask(fields) {
+    addTask({ variables: { input: { title: fields.title, listId: fields.listId, position: 1, description: fields.description, dueAt: fields.dueAt } } })
+      .then(() => refetch())
+      .catch((err) => {
+        console.error('Failed to create task:', err)
+        refetch()
+      })
+  }
+
+  return { tasks, handleDragEnd, moveTaskToList, toggleComplete, setDueDate, updateTask, deleteTask, createTask }
 }

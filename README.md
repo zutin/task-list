@@ -33,7 +33,7 @@ This project was developed using the following tools:
 
 ## Requirements
 
-You can run this project using either **[Docker](https://github.com/zutin/task-list/README.md#installation-docker)** or **[Local Setup](https://github.com/zutin/task-list/README.md#installation-local-setup)**.
+You can run this project using either **[Docker](https://github.com/zutin/task-list#installation-docker)** or **[Local Setup](https://github.com/zutin/task-list#installation-local-setup)**.
 
 ## Installation (Docker)
 

@@ -22,10 +22,6 @@ export default function List({ id, name, tasks, lists, onMoveToList, onToggleCom
 
   const taskIds = tasks.map(t => t.id)
 
-  function handleContextMenu(e) {
-    openMenu(e)
-  }
-
   function handleModalSave(fields) {
     onUpdateList(id, fields)
   }
@@ -37,7 +33,7 @@ export default function List({ id, name, tasks, lists, onMoveToList, onToggleCom
           className="column-title"
           {...listeners}
           {...attributes}
-          onContextMenu={handleContextMenu}
+          onContextMenu={openMenu}
         >
           {name}
         </h2>

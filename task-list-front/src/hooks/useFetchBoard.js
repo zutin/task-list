@@ -15,13 +15,12 @@ function useFetchBoard(boardId) {
 
     const { id, name, description, lists: rawLists } = data.board
 
-    const board = { id, name, description, createdAt: '' }
+    const board = { id, name, description }
 
     const lists = rawLists.map(l => ({
       id: l.id,
       name: l.name,
       position: l.position,
-      createdAt: '',
       boardId: id,
     }))
 

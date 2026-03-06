@@ -5,12 +5,14 @@ import './App.css'
 import useFetchBoard from './hooks/useFetchBoard'
 import useTaskDrag from './hooks/useTaskDrag'
 import useListDrag from './hooks/useListDrag'
+import useFilteredTasks from './hooks/useFilteredTasks'
 import List from './components/List'
 import ListModal from './components/ListModal'
 import Sidebar from './components/Sidebar'
+import FilterPanel from './components/FilterPanel'
 
 function filteredCollisionDetection(args) {
-  const { active, droppableContainers, ...rest } = args
+  const { active, droppableContainers } = args
   const isListDrag = String(active.id).startsWith('list-')
 
   const filtered = droppableContainers.filter(container => {
@@ -27,6 +29,7 @@ function App() {
   const { loading, error, board, lists: fetchedLists, tasks: fetchedTasks, refetch } = useFetchBoard(selectedBoardId)
   const { tasks, handleDragEnd: handleTaskDragEnd, moveTaskToList, toggleComplete, updateTask, deleteTask, createTask } = useTaskDrag({ fetchedTasks, refetch })
   const { lists, handleListDragEnd, updateList, createList, deleteList } = useListDrag({ fetchedLists, boardId: board?.id, refetch })
+  const { filteredTasks, isActive: filtersActive, applyFilters, clearFilters } = useFilteredTasks()
   const [showNewListModal, setShowNewListModal] = useState(false)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
@@ -61,6 +64,7 @@ function App() {
   )
 
   const sortedLists = [...lists].sort((a, b) => a.position - b.position)
+  const displayTasks = filtersActive && filteredTasks ? filteredTasks : tasks
 
   return (
     <div className="app-layout">
@@ -78,7 +82,15 @@ function App() {
                 <h1 className="board-title">{board.name}</h1>
                 {board.description && <p className="board-description">{board.description.length > 100 ? board.description.slice(0, 100) + '…' : board.description}</p>}
               </div>
-              <button className="add-list-btn" onClick={() => setShowNewListModal(true)}>+ Add list</button>
+              <div className="board-header-actions">
+                <FilterPanel
+                  lists={sortedLists}
+                  isActive={filtersActive}
+                  onApply={applyFilters}
+                  onClear={clearFilters}
+                />
+                <button className="add-list-btn" onClick={() => setShowNewListModal(true)}>+ Add list</button>
+              </div>
             </div>
             <div className="columns">
               <SortableContext items={sortedLists.map(l => `list-${l.id}`)} strategy={horizontalListSortingStrategy}>
@@ -87,7 +99,6 @@ function App() {
                     key={list.id}
                     id={list.id}
                     name={list.name}
-                    position={list.position}
                     lists={sortedLists}
                     onMoveToList={moveTaskToList}
                     onToggleComplete={toggleComplete}
@@ -96,7 +107,7 @@ function App() {
                     onDeleteList={deleteList}
                     onDeleteTask={deleteTask}
                     onCreateTask={createTask}
-                    tasks={tasks
+                    tasks={displayTasks
                       .filter(task => task.listId === list.id)
                       .sort((a, b) => a.position - b.position)}
                   />

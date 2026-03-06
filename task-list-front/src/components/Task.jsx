@@ -16,10 +16,6 @@ export default function Task({ task, lists, onMoveToList, onToggleComplete, onUp
     opacity: isDragging ? 0.4 : 1,
   }
 
-  function handleContextMenu(e) {
-    openMenu(e)
-  }
-
   function handleClick() {
     if (!isDragging) setShowModal(true)
   }
@@ -51,7 +47,7 @@ export default function Task({ task, lists, onMoveToList, onToggleComplete, onUp
         style={style}
         {...listeners}
         {...attributes}
-        onContextMenu={handleContextMenu}
+        onContextMenu={openMenu}
         onClick={handleClick}
         className={`task-card ${isDragging ? 'dragging' : ''} ${task.completedAt ? 'completed' : ''}`}
       >

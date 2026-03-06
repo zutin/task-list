@@ -1,16 +1,18 @@
 import { gql } from "@apollo/client";
 
-const GET_TASK = gql`
-  query GetTask($id: ID!) {
-    task(id: $id) {
+const GET_TASKS = gql`
+  query GetTasks($listIds: [ID!], $completed: Boolean, $dueBefore: ISO8601DateTime, $dueAfter: ISO8601DateTime) {
+    tasks(listIds: $listIds, completed: $completed, dueBefore: $dueBefore, dueAfter: $dueAfter) {
       id
       title
       description
+      position
       dueAt
       completedAt
-      position
       createdAt
-      updatedAt
+      list {
+        id
+      }
     }
   }
 `;
@@ -56,4 +58,4 @@ const DELETE_TASK = gql`
   }
 `;
 
-export { GET_TASK, CREATE_TASK, UPDATE_TASK, DELETE_TASK };
+export { GET_TASKS, CREATE_TASK, UPDATE_TASK, DELETE_TASK };

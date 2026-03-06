@@ -7,4 +7,5 @@ class Types::TaskType < Types::BaseObject
   field :position, Integer, null: false
   field :created_at, GraphQL::Types::ISO8601DateTime, null: false
   field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+  field :list, Types::ListType, null: false
 end

@@ -76,15 +76,6 @@ export default function useTaskDrag({ fetchedTasks, refetch }) {
       })
   }
 
-  function setDueDate(taskId, dueAt) {
-    editTask({ variables: { id: taskId, dueAt } })
-      .then(() => refetch())
-      .catch((err) => {
-        console.error('Failed to set due date:', err)
-        refetch()
-      })
-  }
-
   function updateTask(taskId, fields) {
     editTask({ variables: { id: taskId, ...fields } })
       .then(() => refetch())
@@ -113,5 +104,5 @@ export default function useTaskDrag({ fetchedTasks, refetch }) {
       })
   }
 
-  return { tasks, handleDragEnd, moveTaskToList, toggleComplete, setDueDate, updateTask, deleteTask, createTask }
+  return { tasks, handleDragEnd, moveTaskToList, toggleComplete, updateTask, deleteTask, createTask }
 }

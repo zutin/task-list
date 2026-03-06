@@ -1,6 +1,6 @@
 services:
   api:
-    image: ruby:latest
+    image: ruby:3.4.5
     working_dir: /app
     ports:
       - "3000:3000"

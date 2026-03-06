@@ -23,13 +23,41 @@ const GET_BOARD = gql`
         tasks {
           id
           title
+          description
           position
           dueAt
           completedAt
+          createdAt
         }
       }
     }
   }
 `;
 
-export { GET_BOARDS, GET_BOARD };
+const CREATE_BOARD = gql`
+  mutation CreateBoard($input: CreateBoardInput!) {
+    createBoard(input: $input) {
+      board {
+        id
+        name
+        description
+      }
+      errors
+    }
+  }
+`;
+
+const UPDATE_BOARD = gql`
+  mutation EditBoard($input: EditBoardInput!) {
+    editBoard(input: $input) {
+      board {
+        id
+        name
+        description
+      }
+      errors
+    }
+  }
+`;
+
+export { GET_BOARDS, GET_BOARD, CREATE_BOARD, UPDATE_BOARD };

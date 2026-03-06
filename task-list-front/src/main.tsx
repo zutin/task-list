@@ -6,7 +6,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
 
 const client = new ApolloClient({
-  link: new HttpLink({ uri: "https://gian-task-list.up.railway.app/graphql" }),
+  link: new HttpLink({ uri: "http://localhost:3000/graphql" }),
   cache: new InMemoryCache(),
 });
 

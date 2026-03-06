@@ -1,14 +1,12 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import useContextMenu from '../hooks/useContextMenu'
 import TaskModal from './TaskModal'
 
 export default function Task({ task, lists, onMoveToList, onToggleComplete, onUpdateTask, onDeleteTask }) {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [menuPos, setMenuPos] = useState({ x: 0, y: 0 })
   const [showModal, setShowModal] = useState(false)
-  const [confirmDelete, setConfirmDelete] = useState(false)
-  const menuRef = useRef(null)
+  const { menuOpen, menuPos, menuRef, confirmDelete, setConfirmDelete, openMenu, closeMenu } = useContextMenu()
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id })
 
@@ -19,28 +17,15 @@ export default function Task({ task, lists, onMoveToList, onToggleComplete, onUp
   }
 
   function handleContextMenu(e) {
-    e.preventDefault()
-    setMenuPos({ x: e.clientX, y: e.clientY })
-    setMenuOpen(true)
+    openMenu(e)
   }
 
   function handleClick() {
     if (!isDragging) setShowModal(true)
   }
 
-  useEffect(() => {
-    if (!menuOpen) return
-    function handleClickOutside(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [menuOpen])
-
   function handleMove(listId) {
-    setMenuOpen(false)
+    closeMenu()
     onMoveToList(task.id, listId)
   }
 
@@ -104,13 +89,13 @@ export default function Task({ task, lists, onMoveToList, onToggleComplete, onUp
           <div className="context-menu-label">{task.title.length > 20 ? task.title.slice(0, 20) + '…' : task.title}</div>
           <button
             className="context-menu-item"
-            onClick={() => { setMenuOpen(false); onToggleComplete(task.id, !!task.completedAt) }}
+            onClick={() => { closeMenu(); onToggleComplete(task.id, !!task.completedAt) }}
           >
             {task.completedAt ? 'Mark as incomplete' : 'Mark as complete'}
           </button>
           <button
             className="context-menu-item"
-            onClick={() => { setMenuOpen(false); setShowModal(true) }}
+            onClick={() => { closeMenu(); setShowModal(true) }}
           >
             Edit task
           </button>
@@ -133,7 +118,7 @@ export default function Task({ task, lists, onMoveToList, onToggleComplete, onUp
             <div className="context-menu-confirm">
               <span className="context-menu-confirm-label">Delete this task?</span>
               <div className="context-menu-confirm-actions">
-                <button className="context-menu-confirm-btn confirm-yes" onClick={() => { setMenuOpen(false); setConfirmDelete(false); onDeleteTask(task.id) }}>Yes</button>
+                <button className="context-menu-confirm-btn confirm-yes" onClick={() => { closeMenu(); onDeleteTask(task.id) }}>Yes</button>
                 <button className="context-menu-confirm-btn confirm-no" onClick={() => setConfirmDelete(false)}>No</button>
               </div>
             </div>

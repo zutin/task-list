@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useQuery } from '@apollo/client/react'
-import { GET_BOARD } from './graphql/queries/Boards'
+import { GET_BOARD } from '../graphql/queries/Boards'
 
 function useFetchBoard(boardId) {
   const { loading, error, data, refetch } = useQuery(GET_BOARD, {

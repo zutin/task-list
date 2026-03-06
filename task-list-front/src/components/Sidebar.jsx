@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client/react'
 import { GET_BOARDS, CREATE_BOARD, UPDATE_BOARD, DELETE_BOARD } from '../graphql/queries/Boards'
+import useContextMenu from '../hooks/useContextMenu'
 import BoardModal from './BoardModal'
 
 export default function Sidebar({ selectedBoardId, onSelectBoard, collapsed, onToggleCollapse }) {
@@ -15,30 +16,12 @@ export default function Sidebar({ selectedBoardId, onSelectBoard, collapsed, onT
   const [modalMode, setModalMode] = useState('create')
   const [editingBoard, setEditingBoard] = useState(null)
 
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [menuPos, setMenuPos] = useState({ x: 0, y: 0 })
+  const { menuOpen, menuPos, menuRef, confirmDelete, setConfirmDelete, openMenu, closeMenu } = useContextMenu()
   const [menuBoard, setMenuBoard] = useState(null)
-  const [confirmDelete, setConfirmDelete] = useState(false)
-  const menuRef = useRef(null)
-
-  useEffect(() => {
-    if (!menuOpen) return
-    function handleClickOutside(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false)
-        setConfirmDelete(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [menuOpen])
 
   function handleContextMenu(e, board) {
-    e.preventDefault()
-    setMenuPos({ x: e.clientX, y: e.clientY })
+    openMenu(e)
     setMenuBoard(board)
-    setMenuOpen(true)
-    setConfirmDelete(false)
   }
 
   function handleCreate(fields) {
@@ -113,7 +96,7 @@ export default function Sidebar({ selectedBoardId, onSelectBoard, collapsed, onT
           <div className="context-menu-label">{menuBoard.name.length > 20 ? menuBoard.name.slice(0, 20) + '…' : menuBoard.name}</div>
           <button
             className="context-menu-item"
-            onClick={() => { setMenuOpen(false); setEditingBoard(menuBoard); setModalMode('edit'); setShowModal(true) }}
+            onClick={() => { closeMenu(); setEditingBoard(menuBoard); setModalMode('edit'); setShowModal(true) }}
           >
             Edit board
           </button>
@@ -122,7 +105,7 @@ export default function Sidebar({ selectedBoardId, onSelectBoard, collapsed, onT
             <div className="context-menu-confirm">
               <span className="context-menu-confirm-label">Delete this board?</span>
               <div className="context-menu-confirm-actions">
-                <button className="context-menu-confirm-btn confirm-yes" onClick={() => { setMenuOpen(false); setConfirmDelete(false); handleDelete(menuBoard.id) }}>Yes</button>
+                <button className="context-menu-confirm-btn confirm-yes" onClick={() => { closeMenu(); handleDelete(menuBoard.id) }}>Yes</button>
                 <button className="context-menu-confirm-btn confirm-no" onClick={() => setConfirmDelete(false)}>No</button>
               </div>
             </div>

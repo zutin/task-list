@@ -28,7 +28,6 @@ export default function useTaskDrag({ fetchedTasks, refetch }) {
     const overTask = tasks.find(t => t.id === overId)
 
     if (!activeTask || !overTask) return
-    // Only reorder within the same list
     if (activeTask.listId !== overTask.listId) return
 
     const listId = activeTask.listId
@@ -44,7 +43,6 @@ export default function useTaskDrag({ fetchedTasks, refetch }) {
     const reordered = arrayMove(listTasks, fromIndex, toIndex)
     const newPosition = toIndex + 1
 
-    // Optimistic update
     setTasks(prev => {
       const otherTasks = prev.filter(t => t.listId !== listId)
       const updated = reordered.map((t, i) => ({ ...t, position: i + 1 }))

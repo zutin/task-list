@@ -24,7 +24,6 @@ export default function useListDrag({ fetchedLists, boardId, refetch }) {
     const activeId = String(active.id).replace('list-', '')
     const overId = String(over.id).replace('list-', '')
 
-    // Ignore if over target is not a list
     if (!String(over.id).startsWith('list-')) return
 
     const sorted = [...lists].sort((a, b) => a.position - b.position)
@@ -36,7 +35,6 @@ export default function useListDrag({ fetchedLists, boardId, refetch }) {
     const reordered = arrayMove(sorted, fromIndex, toIndex)
     const newPosition = toIndex + 1
 
-    // Optimistic update
     setLists(reordered.map((l, i) => ({ ...l, position: i + 1 })))
 
     editList({ variables: { id: activeId, position: newPosition } })

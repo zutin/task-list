@@ -41,6 +41,6 @@ module Types
 
     def board(id:) = Board.includes(lists: :tasks).find_by(id: id)
 
-    def boards = Board.includes(lists: :tasks).order(updated_at: :desc, name: :asc)
+    def boards = Board.includes(lists: :tasks).order(created_at: :desc, name: :asc)
   end
 end

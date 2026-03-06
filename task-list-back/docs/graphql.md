@@ -1,5 +1,4 @@
-## URL
-You can access the GraphQL endpoint at `/graphql`
+# GraphQL API Documentation
 
 ## Types
 

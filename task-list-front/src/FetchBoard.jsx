@@ -2,9 +2,10 @@ import { useMemo } from 'react'
 import { useQuery } from '@apollo/client/react'
 import { GET_BOARD } from './graphql/queries/Boards'
 
-function useFetchBoard() {
+function useFetchBoard(boardId) {
   const { loading, error, data, refetch } = useQuery(GET_BOARD, {
-    variables: { id: '1' }
+    variables: { id: boardId },
+    skip: !boardId,
   })
 
   const result = useMemo(() => {

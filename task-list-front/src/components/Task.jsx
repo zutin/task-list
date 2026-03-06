@@ -81,7 +81,7 @@ export default function Task({ task, lists, onMoveToList, onToggleComplete, onUp
               Due: {new Date(task.dueAt).toLocaleDateString()}
             </span>
           )}
-          <span className="task-pos">#{task.id}</span>
+          <span className="task-pos" style={{ marginLeft: 'auto' }}>#{task.id}</span>
         </div>
       </div>
 

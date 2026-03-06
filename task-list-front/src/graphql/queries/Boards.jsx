@@ -60,4 +60,13 @@ const UPDATE_BOARD = gql`
   }
 `;
 
-export { GET_BOARDS, GET_BOARD, CREATE_BOARD, UPDATE_BOARD };
+const DELETE_BOARD = gql`
+  mutation DeleteBoard($input: DeleteBoardInput!) {
+    deleteBoard(input: $input) {
+      id
+      errors
+    }
+  }
+`;
+
+export { GET_BOARDS, GET_BOARD, CREATE_BOARD, UPDATE_BOARD, DELETE_BOARD };
